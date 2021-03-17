@@ -61,55 +61,68 @@ const desenharGrafico = (tabuleiroAtual) => {
     arr.estadoInicial = tabuleiroAtual;
     let caminhos = arr.buscaPorProfundidade(arr.raiz);
 
-    graph.innerHTML = ""
-    for (let i = caminhos.raiz.tabuleiro.caminhos.tamanho() - 1; i >= 0; i--) {
-        let novoEl = document.createElement("div");
-        novoEl.classList.add("element")
+    graph.innerHTML = "";
 
-        for (let j = 0; j < 3; j++) {
-            for (let k = 0; k < 3; k++) {
-                let path = caminhos.raiz.tabuleiro.caminhos.meio(i).tabuleiro[j][k];
-                if (k == 0) {
-                    novoEl.innerHTML += '['
+    let novaDiv, filhosNovaDiv;
+    //adicionar = para ter as 4 solucoes, a ultima solucao eh igual a penultima
+    for (let c = 0; c < caminhos.tamanho(); c++) {
+        novaDiv = document.createElement("div");
+        graph.appendChild(novaDiv);
+        for (let w = caminhos.meio(c).caminhos.tamanho() - 1; w >= 0; w--) {
+            filhosNovaDiv = document.createElement("div");
+            filhosNovaDiv.classList.add("element");
+
+            for (let i = 0; i < caminhos.meio(c).caminhos.meio(w).tabuleiro.length; i++) {
+                for (let j = 0; j < caminhos.meio(c).caminhos.meio(w).tabuleiro[i].length; j++) {
+                    let path = caminhos.meio(c).caminhos.meio(w).tabuleiro[i][j];
+                    if (j == 0) {
+                        filhosNovaDiv.innerHTML += "[";
+
+                    }
+                    if (path == "") {
+                        filhosNovaDiv.innerHTML += "&nbsp;&nbsp;&nbsp;";
+                    } else {
+                        filhosNovaDiv.innerHTML += path + "&nbsp;";
+                    }
+                    if (j == 2) {
+                        filhosNovaDiv.innerHTML += "]<br>";
+                    }
+
                 }
-                if (k == 2) {
-                    novoEl.innerHTML += `${path == "" ? " " : path}&nbsp;]<br>`;
+            }
+
+            novaDiv.appendChild(filhosNovaDiv)
+            novaDiv.innerHTML += "<span style='font-size:40px;color:red'>&darr;</span>"
+        }
+
+        //solution
+        filhosNovaDiv = document.createElement("div");
+        filhosNovaDiv.classList.add("element2");
+
+        for (let i = 0; i < caminhos.meio(c).tabuleiro.length; i++) {
+            for (let j = 0; j < caminhos.meio(c).tabuleiro[i].length; j++) {
+                let path = caminhos.meio(c).tabuleiro[i][j];
+                if (j == 0) {
+                    filhosNovaDiv.innerHTML += "[";
+
+                }
+                if (path == "") {
+                    filhosNovaDiv.innerHTML += "&nbsp;&nbsp;&nbsp;";
                 } else {
-                    novoEl.innerHTML += `${path == "" ? " " : path}&nbsp;`;
+                    filhosNovaDiv.innerHTML += path + "&nbsp;";
+                }
+                if (j == 2) {
+                    filhosNovaDiv.innerHTML += "]<br>";
                 }
 
-
-            }
-            if (j == 2) {
-                graph.innerHTML += "<div style='font-size:50px;color:red'>&darr;</div>"
             }
         }
 
-        novoEl.innerHTML += `</div>`
-        graph.appendChild(novoEl)
 
+        //filhosNovaDiv.innerHTML = caminhos.meio(c).tabuleiro;
+        novaDiv.appendChild(filhosNovaDiv)
     }
 
-
-    let novoEl = document.createElement("div");
-    novoEl.classList.add("solucao")
-    graph.innerHTML += "<div style='font-size:50px;color:pink'>&darr;</div>"
-    for (let j = 0; j < 3; j++) {
-        for (let k = 0; k < 3; k++) {
-            let path = caminhos.raiz.tabuleiro.tabuleiro[j][k];
-            if (k == 0) {
-                novoEl.innerHTML += '['
-            }
-            if (k == 2) {
-                novoEl.innerHTML += `${path == "" ? " " : path}&nbsp;]<br>`;
-            } else {
-                novoEl.innerHTML += `${path == "" ? " " : path}&nbsp;`;
-            }
-        }
-    }
-
-    novoEl.innerHTML += `</div>`
-    graph.appendChild(novoEl)
 }
 
 

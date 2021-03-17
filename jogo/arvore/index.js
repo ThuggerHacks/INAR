@@ -87,7 +87,7 @@ export class Arvore {
       this.buscaPorProfundidade(this.pilha.inicio(), profundidade);
     }
 
-    return this.melhorSolucao(this.objectivos);
+    return this.objectivos;
   }
 
   melhorSolucao(objectivos) {
