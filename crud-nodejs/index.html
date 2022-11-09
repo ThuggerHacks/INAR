@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <input type="text" name="" id="nome"><br>
+        <input type="email" name="" id="email"><br>
+        <input type="password" name="" id="senha"><br>
+        <input type="hidden" name="" id="hidden"><br>
+        <button>Cadastrar</button>
+        <button onclick="update()">Atualizar</button>
+    <div id="root"></div>
+</body>
+</html>
+
+<script src="axios.js"></script>
+<script>
+
+    let btn = document.querySelector("button");
+    let div = document.querySelector("#root");
+
+    btn.addEventListener("click",async () => {
+        const user = {
+            nome:document.querySelector("#nome").value,
+            email:document.querySelector("#email").value,
+            password:document.querySelector("#senha").value
+        }
+        const data = await axios.post("http://localhost:8888/api/user",user);
+
+        alert("inserido")
+        window.open(window.location.href,"_self")
+    });
+
+
+    window.onload = async() => {
+        const data = await axios.get("http://localhost:8888/api/user");
+
+        data.data.user.map( (data,i) => {
+            div.innerHTML+= `Nome: ${data.dados.nome}<br>Email: ${data.dados.email}<br>Senha: ${data.dados.password}<br><button onclick="apagar(${data.id})">Apagar</button><button onclick="atualizar(${data.id},'${data.dados.nome}','${data.dados.email}','${data.dados.password}')">Atualizar</button><hr>`;
+        })
+
+    }
+
+
+    const apagar = async(id) => {
+        const user = await axios.delete("http://localhost:8888/api/user/" + id );
+        alert(user.data)
+        window.open(window.location.href,"_self")
+    }
+
+    const atualizar = (id,nome,email,senha) => {
+        document.querySelector("#nome").value = nome;
+        document.querySelector("#email").value = email;
+        document.querySelector("#senha").value = senha;
+        document.querySelector("#hidden").value = id;
+    }
+
+    const update = async() => {
+        
+        const data = {
+            nome:document.querySelector("#nome").value ,
+            email:document.querySelector("#email").value ,
+            senha:document.querySelector("#senha").value 
+        }
+        const user = await axios.put("http://localhost:8888/api/user/" + document.querySelector("#hidden").value ,data);
+        alert("Atualizado")
+        window.open(window.location.href,"_self")
+    }
+</script>
